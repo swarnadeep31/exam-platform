@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { API_BASE_URL } from "@/lib/config";
 
 const inputClass =
   "w-full bg-white text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500";
@@ -22,7 +23,7 @@ export default function AdminLoginPage() {
 
     try {
       const res = await fetchWithAuth(
-        "http://localhost:5000/api/auth/login",
+        `${API_BASE_URL}/api/auth/login`,
         {
           method: "POST",
           skipAuth: true, // 🔑 VERY IMPORTANT
