@@ -27,7 +27,7 @@ export default function DashboardPage() {
   }, []);
 
   if (loading) {
-    return <p className="p-6">Loading dashboard...</p>;
+    return <DashboardSkeleton/>
   }
 
   const totalAttempts = attempts.length;
@@ -68,3 +68,24 @@ function Stat({ title, value }: { title: string; value: any }) {
     </div>
   );
 }
+
+function DashboardSkeleton() {
+  return (
+    <div className="p-6 space-y-6 animate-pulse">
+      <div className="h-6 w-40 bg-slate-200 rounded" />
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div
+            key={i}
+            className="bg-white border rounded-xl p-5 shadow space-y-3"
+          >
+            <div className="h-4 w-24 bg-slate-200 rounded" />
+            <div className="h-8 w-16 bg-slate-300 rounded" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
