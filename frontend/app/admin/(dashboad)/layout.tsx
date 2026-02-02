@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { isAdmin } from "@/lib/requireAdmin";
-import AdminLogoutButton from "@/components/AdminLogoutButton";
+import Navbar from "@/components/Navbar";
+import { motion } from "framer-motion";
 
 export default function AdminLayout({
   children,
@@ -21,17 +22,18 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* Admin Header */}
-      <header className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
-        <h1 className="text-lg font-bold text-slate-900">
-          Admin Dashboard
-        </h1>
-
-        <AdminLogoutButton />
-      </header>
+      {/* Global Navbar */}
+      <Navbar />
 
       {/* Page Content */}
-      <main className="p-6">{children}</main>
+      <motion.main
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+        className="max-w-7xl mx-auto p-6"
+      >
+        {children}
+      </motion.main>
     </div>
   );
 }
