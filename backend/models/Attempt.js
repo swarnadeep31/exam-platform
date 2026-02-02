@@ -1,21 +1,40 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
-const attempSchema = new mongoose.Schema(
-    {
-        score : {
-            type: Number,
-            require: true
-        },
-        total : {
-            type: Number,
-            require: true
-        },
-        answer : {
-            type: Object,
-            require: true
-        },
+const attemptSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: String,
+      required: true,
+      // later this can be Google ID, Mongo user _id.
     },
-    {timestamps: true}
-)
 
-export default mongoose.model("Attempt",attempSchema)
+    authProvider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+    },
+
+    subject: {
+      type: String,
+      required: true,
+    },
+
+    score: {
+      type: Number,
+      required: true,
+    },
+
+    total: {
+      type: Number,
+      required: true,
+    },
+
+    answers: {
+      type: Object,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model("Attempt", attemptSchema);

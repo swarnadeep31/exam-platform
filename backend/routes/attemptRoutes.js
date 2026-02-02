@@ -16,12 +16,13 @@ router.post("/", async (req, res) => {
 
 // Get all attempts (admin/debug)
 router.get("/", async (req, res) => {
-  try {
-    const attempts = await Attempt.find().sort({ createdAt: -1 });
-    res.json(attempts);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  const { userId } = req.query;
+
+  const filter = userId ? { userId } : {};
+  const attempts = await Attempt.find(filter).sort({ createdAt: -1 });
+
+  res.json(attempts);
 });
+
 
 export default router;
