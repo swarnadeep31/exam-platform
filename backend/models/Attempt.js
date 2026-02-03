@@ -5,7 +5,7 @@ const attemptSchema = new mongoose.Schema(
     userId: {
       type: String,
       required: true,
-      // later this can be Google ID, Mongo user _id.
+      // later this can be Google ID, Mongo user _id
     },
 
     authProvider: {
@@ -30,7 +30,8 @@ const attemptSchema = new mongoose.Schema(
     },
 
     answers: {
-      type: Object,
+      type: Map,
+      of: Number,
       required: true,
     },
   },

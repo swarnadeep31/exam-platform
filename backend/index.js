@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import questionRoutes from "./routes/questionRoutes.js"
 import attemptRoutes from "./routes/attemptRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
   res.send("API running...");
 });
 
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/attempts", attemptRoutes);
 app.use("/api/auth", authRoutes);
