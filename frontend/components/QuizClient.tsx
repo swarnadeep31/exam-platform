@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Question } from "@/types/question";
 import ResultModal from "./ResultModal";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "@/lib/config";
 
 export default function QuizClient({ questions }: { questions: Question[] }) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
@@ -25,7 +26,7 @@ export default function QuizClient({ questions }: { questions: Question[] }) {
     setShowResult(true);
 
     // Save attempt
-    await fetch("http://localhost:5000/api/attempts", {
+    await fetch(`${API_BASE_URL}/api/attempts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

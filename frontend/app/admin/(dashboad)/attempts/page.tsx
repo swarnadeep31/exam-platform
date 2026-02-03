@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "@/lib/config";
 
 interface Attempt {
   _id: string;
@@ -16,7 +17,7 @@ export default function AdminAttemptsPage() {
 
   async function fetchAttempts() {
     try {
-      const res = await fetch("http://localhost:5000/api/attempts");
+      const res = await fetch(`${API_BASE_URL}/api/attempts`);
       const data = await res.json();
       setAttempts(data);
     } catch {

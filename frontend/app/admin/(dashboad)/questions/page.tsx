@@ -5,6 +5,31 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { isAdmin } from "@/lib/requireAdmin";
+import { API_BASE_URL } from "@/lib/config";
+
+const SAMPLE_QUESTIONS = [
+  {
+    _id: "sample-1",
+    question: "What is closure in JavaScript?",
+    topic: "JavaScript",
+    difficulty: "Medium",
+    isSample: true,
+  },
+  {
+    _id: "sample-2",
+    question: "What does useState return in React?",
+    topic: "React",
+    difficulty: "Easy",
+    isSample: true,
+  },
+  {
+    _id: "sample-3",
+    question: "Which HTTP method updates data?",
+    topic: "Web",
+    difficulty: "Easy",
+    isSample: true,
+  },
+];
 
 interface Question {
   _id: string;
@@ -16,13 +41,12 @@ interface Question {
 export default function AdminQuestionsPage() {
   const router = useRouter();
 
-
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function fetchQuestions() {
     try {
-      const res = await fetch("http://localhost:5000/api/questions");
+      const res = await fetch(`${API_BASE_URL}/api/questions`);
       const data = await res.json();
       setQuestions(data);
     } catch (err) {
@@ -36,7 +60,7 @@ export default function AdminQuestionsPage() {
     const confirmed = confirm("Are you sure you want to delete this question?");
     if (!confirmed) return;
 
-    await fetch(`http://localhost:5000/api/questions/${id}`, {
+    await fetch(`${API_BASE_URL}/api/questions/${id}`, {
       method: "DELETE",
     });
 
@@ -46,6 +70,9 @@ export default function AdminQuestionsPage() {
   useEffect(() => {
     fetchQuestions();
   }, []);
+
+  const displayQuestions =
+    questions.length === 0 ? SAMPLE_QUESTIONS : questions;
 
   return (
     <motion.main
@@ -78,7 +105,7 @@ export default function AdminQuestionsPage() {
               transition: { staggerChildren: 0.08 },
             },
           }}>
-          {questions.map((q) => (
+          {displayQuestions.map((q) => (
             <motion.div
               key={q._id}
               className="bg-white border border-slate-200 rounded-xl p-4 flex justify-between items-start gap-4"
@@ -96,7 +123,7 @@ export default function AdminQuestionsPage() {
 
               {/* Actions */}
               <div className="flex items-center gap-3">
-                <Link
+                {/* <Link
                   href={`/admin/questions/${q._id}`}
                   className="text-blue-600 hover:text-blue-700 text-sm font-medium">
                   Edit
@@ -106,7 +133,22 @@ export default function AdminQuestionsPage() {
                   onClick={() => deleteQuestion(q._id)}
                   className="text-red-600 hover:text-red-700 text-sm font-medium">
                   Delete
-                </button>
+                </button> */}
+
+                {"isSample" in q && (
+                  <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">
+                    Sample
+                  </span>
+                )}
+
+                {!("isSample" in q) && (
+                  <>
+                    <Link href={`/admin/questions/${q._id}`}>Edit</Link>
+                    <button onClick={() => deleteQuestion(q._id)}>
+                      Delete
+                    </button>
+                  </>
+                )}
               </div>
             </motion.div>
           ))}

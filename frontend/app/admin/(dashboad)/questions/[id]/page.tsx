@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { isAdmin } from "@/lib/requireAdmin";
+import { API_BASE_URL } from "@/lib/config";
 
 const inputClass =
   "w-full bg-white text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500";
@@ -21,21 +22,28 @@ export default function EditQuestionPage() {
 
 
   // 📥 Load question
-  useEffect(() => {
-    async function loadQuestion() {
-      const res = await fetch(`http://localhost:5000/api/questions/${id}`);
-      const data = await res.json();
+ useEffect(() => {
+  async function loadQuestion() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/questions/${id}`);
+      if (!res.ok) throw new Error("Not found");
 
+      const data = await res.json();
       setQuestion(data.question);
       setOptions(data.options);
       setCorrectOption(data.correctOption);
       setTopic(data.topic);
       setDifficulty(data.difficulty);
+    } catch {
+      router.push("/admin/questions");
+    } finally {
       setLoading(false);
     }
+  }
 
-    if (id) loadQuestion();
-  }, [id]);
+  if (id) loadQuestion();
+}, [id, router]);
+
 
   function handleOptionChange(i: number, value: string) {
     const updated = [...options];
@@ -46,7 +54,7 @@ export default function EditQuestionPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    await fetch(`http://localhost:5000/api/questions/${id}`, {
+    await fetch(`${API_BASE_URL}/api/questions/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { isAdmin } from "@/lib/requireAdmin";
+import { API_BASE_URL } from "@/lib/config";
 
 const inputClass =
   "w-full bg-white text-slate-900 placeholder:text-slate-400 border border-slate-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500";
@@ -19,8 +21,15 @@ export default function EditQuestionPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+  if (!isAdmin()) {
+    router.push("/admin/login");
+  }
+}, [router]);
+
+
+  useEffect(() => {
     async function load() {
-      const res = await fetch(`http://localhost:5000/api/questions/${id}`);
+      const res = await fetch(`${API_BASE_URL}/api/questions/${id}`);
       const data = await res.json();
       setQuestion(data.question);
       setOptions(data.options);
@@ -35,7 +44,7 @@ export default function EditQuestionPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    await fetch(`http://localhost:5000/api/questions/${id}`, {
+    await fetch(`${API_BASE_URL}/api/questions/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
